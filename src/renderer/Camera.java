@@ -68,7 +68,10 @@ public class Camera {
      * 观察-投影 变换矩阵
      */
     private Matrix4f viewProjectionMatrix = new Matrix4f();
-    
+
+    // 视口变换矩阵
+    private Matrix4f viewportMatrix = new Matrix4f();
+
     /**
      * 初始化摄像机
      * @param width
@@ -78,7 +81,7 @@ public class Camera {
         this.width = width;
         this.height = height;
         this.aspect = (float) width / height;// 屏幕宽高比
-        
+
         // 计算观察-投影变换矩阵
         updateViewProjectionMatrix();
     }
@@ -159,6 +162,11 @@ public class Camera {
     public Matrix4f getViewMatrix() {
         return viewMatrix;
     }
+
+    // 获取视口变换矩阵
+    public Matrix4f getViewportMatrix(){
+        return viewportMatrix;
+    }
     
     /**
      * 获取投影变换矩阵
@@ -184,7 +192,7 @@ public class Camera {
         updateProjectionMatrix();
         projectionMatrix.mult(viewMatrix, viewProjectionMatrix);
     }
-    
+
     /**
      * 观察变换矩阵
      */
@@ -224,6 +232,20 @@ public class Camera {
             setOrthographic(left, right, bottom, top, near, far);
         }
     }
+
+    public void updateViewportMatrix(){
+        float w = width * 0.5f;
+        float h = height * 0.5f;
+
+        // 把模型移到屏幕中心，并且按屏幕比例放大。
+        float m00 = w, m01 = 0,  m02 = 0,  m03 = w;
+        float m10 = 0, m11 = -h, m12 = 0,  m13 = h;
+        float m20 = 0, m21 = 0,  m22 = 1f, m23 = 0;
+        float m30 = 0, m31 = 0,  m32 = 0,  m33 = 1;
+
+        viewportMatrix.set(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
+    }
+
     
     /**
      * 透视投影

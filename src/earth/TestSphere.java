@@ -27,7 +27,7 @@ public class TestSphere extends Application {
     public static void main(String[] args) {
         TestSphere app = new TestSphere();
         app.setResolution(800, 600);
-        app.setTitle("Test earth.Sphere");
+        app.setTitle("Test earth");
         app.setFrameRate(60);
         app.start();
     }
@@ -49,7 +49,7 @@ public class TestSphere extends Application {
         material.setDiffuse(new Vector4f(1, 1, 1, 1));
 
         try {
-            material.setDiffuseMap(new Texture(new Image("res/earth.jpg")));
+            material.setDiffuseMap(new Texture(new Image("res/map1.jpg")));
         } catch (Exception e){
             material.setDiffuseMap(new Texture());
         }
@@ -57,11 +57,9 @@ public class TestSphere extends Application {
         // 添加到场景中
         Geometry geometry = new Geometry(mesh, material);
         rootNode.attachChild(geometry);
-
         // 设置着色器
+//        material.getRenderState().setFillMode(RenderState.FillMode.LINE);
         material.setShader(new UnshadedShader());
-        material.getRenderState().setFillMode(RenderState.FillMode.LINE);
-//        material.getRenderState().setFillMode(RenderState.FillMode.POINT);
     }
 
     @Override
@@ -74,6 +72,6 @@ public class TestSphere extends Application {
         }
 
         // 计算旋转：绕Z轴顺时针方向旋转
-        geom.getLocalTransform().getRotation().fromAxisAngle(Vector3f.UNIT_Y, -angle);
+//        geom.getLocalTransform().getRotation().fromAxisAngle(Vector3f.UNIT_Y, -angle);
     }
 }

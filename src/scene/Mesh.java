@@ -1,6 +1,5 @@
 package scene;
 
-import math.Transform;
 import math.Vector2f;
 import math.Vector3f;
 import math.Vector4f;
@@ -51,12 +50,5 @@ public class Mesh {
                 vertexes[index].texCoord = texCoords[index];
             }
         }
-    }
-
-    // 相对空间变换
-    private Transform localTransform = new Transform();
-
-    public Transform getLocalTransform() {
-        return localTransform;
     }
 }

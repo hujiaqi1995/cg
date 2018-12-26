@@ -12,7 +12,7 @@ import shader.Shader;
 public class SoftwareRaster extends ImageRaster {
 
     private final static float INV_SCALE = 1f / 255f;
-    
+
     // 深度缓冲
     protected float[] depthBuffer;
 
@@ -21,24 +21,24 @@ public class SoftwareRaster extends ImageRaster {
 
     // 渲染状态
     protected RenderState renderState;
-    
+
     public void setRenderState(RenderState renderState) {
         this.renderState = renderState;
     }
-    
+
     // 着色器
     private Shader shader;
-    
+
     public void setShader(Shader shader) {
         this.shader = shader;
     }
-    
+
     public SoftwareRaster(Renderer renderer, Image image) {
         super(image);
         this.depthBuffer = new float[width * height];
         this.renderer = renderer;
     }
-    
+
     /**
      * 清除深度缓冲
      */
@@ -48,7 +48,7 @@ public class SoftwareRaster extends ImageRaster {
             depthBuffer[i] = 1.0f;
         }
     }
-    
+
     /**
      * 光栅化点
      * @param x
@@ -56,7 +56,7 @@ public class SoftwareRaster extends ImageRaster {
      * @param frag
      */
     public void rasterizePixel(int x, int y, RasterizationVertex frag) {
-        
+
         if (x < 0 || y < 0 || x >= width || y >= height) {
             return;
         }
@@ -129,7 +129,7 @@ public class SoftwareRaster extends ImageRaster {
         components[index + 2] = (byte)(destColor.z * 0xFF);
         components[index + 3] = (byte)(destColor.w * 0xFF);
     }
-    
+
     /**
      * 对齐
      * @param v
@@ -143,14 +143,14 @@ public class SoftwareRaster extends ImageRaster {
             max = min;
             min = tmp;
         }
-        
+
         if (v < min)
             v = min;
         if (v > max)
             v = max;
         return v;
     }
-    
+
     /**
      * 提取颜色
      * @param x
@@ -159,13 +159,13 @@ public class SoftwareRaster extends ImageRaster {
      */
     public Vector4f getColor(int x, int y) {
         Vector4f color = new Vector4f();
-        
+
         int index = (x + y * width) * 4;
         float r = (float)(0xFF & components[index]) * INV_SCALE;
         float g = (float)(0xFF & components[index+1]) * INV_SCALE;
         float b = (float)(0xFF & components[index+2]) * INV_SCALE;
         float a = (float)(0xFF & components[index+3]) * INV_SCALE;
-        
+
         color.set(r, g, b, a);
         return color;
     }
@@ -174,7 +174,7 @@ public class SoftwareRaster extends ImageRaster {
     private RasterizationVertex v0 = new RasterizationVertex();
     private RasterizationVertex v1 = new RasterizationVertex();
     private RasterizationVertex v2 = new RasterizationVertex();
-    
+
     /**
      * 光栅化三角形
      * @param a
@@ -275,14 +275,14 @@ public class SoftwareRaster extends ImageRaster {
     private void fillBottomLineTriangle(RasterizationVertex v0, RasterizationVertex v1, RasterizationVertex v2) {
         int y0 = (int) Math.ceil(v0.position.y);
         int y2 = (int) Math.ceil(v2.position.y);
-        
+
         for (int y = y0; y <y2; y++) {
             if (y >= 0 && y < this.height) {
-                
+
                 // 插值生成左右顶点
                 // FIXME 需要透视校正
                 float t = (y - v0.position.y) / (v1.position.y - v0.position.y);
-                
+
                 RasterizationVertex vl = new RasterizationVertex();
                 vl.interpolateLocal(v0, v1, t);
                 RasterizationVertex vr = new RasterizationVertex();
@@ -309,18 +309,18 @@ public class SoftwareRaster extends ImageRaster {
                 // 插值生成左右顶点
                 // FIXME 需要透视校正
                 float t = (y - v0.position.y) / (v2.position.y - v0.position.y);
-                
+
                 RasterizationVertex vl = new RasterizationVertex();
                 vl.interpolateLocal(v0, v2, t);
                 RasterizationVertex vr = new RasterizationVertex();
                 vr.interpolateLocal(v1, v2, t);
-                
+
                 //扫描线填充
                 rasterizeScanline(vl, vr, y);
             }
         }
     }
-    
+
     /**
      * 光栅化扫描线
      * @param v0
@@ -331,21 +331,21 @@ public class SoftwareRaster extends ImageRaster {
         int x0 = (int) Math.ceil(v0.position.x);
         // 按照DirectX和OpenGL的光栅化规则，舍弃右下的顶点。
         int x1 = (int) Math.floor(v1.position.x);
-        
+
         for (int x = x0; x <= x1; x++) {
             if (x < 0 || x >= width)
                 continue;
-            
+
             // 线性插值
             // FIXME 需要透视校正
             float t = (x - v0.position.x) / (v1.position.x - v0.position.x);
             RasterizationVertex frag = new RasterizationVertex();
             frag.interpolateLocal(v0, v1, t);
-            
+
             rasterizePixel(x, y, frag);
         }
     }
-    
+
     /**
      * 光栅化线段，使用Bresenham算法。
      * @param v0
@@ -384,11 +384,11 @@ public class SoftwareRaster extends ImageRaster {
                 t= (y - v0.position.y) / (v1.position.y - v0.position.y);
             else
                 t = (x - v0.position.x) / (v1.position.x - v0.position.x);
-            
+
             RasterizationVertex frag = new RasterizationVertex();
             frag.interpolateLocal(v0, v1, t);
             rasterizePixel(x, y, frag);
-            
+
             numerator += slowStep;
             if (numerator >= fastStep) {
                 numerator -= fastStep;
@@ -398,17 +398,17 @@ public class SoftwareRaster extends ImageRaster {
                 x += dx2;
                 y += dy2;
             }
-            
+
             // 线性插值
             if (ylerp)
                 t= (y - v0.position.y) / (v1.position.y - v0.position.y);
             else
                 t = (x - v0.position.x) / (v1.position.x - v0.position.x);
-            
+
             rasterizePixel(x, y, frag);
         }
     }
-    
+
     /**
      * 深度测试
      * @param oldDepth
@@ -436,7 +436,7 @@ public class SoftwareRaster extends ImageRaster {
         }
         return false;
     }
-    
+
 //    /**
 //     * 片段着色器
 //     * @param frag

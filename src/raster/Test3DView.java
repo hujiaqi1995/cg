@@ -77,7 +77,7 @@ public class Test3DView extends Application {
         }
 
         // 计算旋转：绕Z轴顺时针方向旋转
-        mesh.getLocalTransform().getRotation().fromAxisAngle(Vector3f.UNIT_Y, -angle);
+//        mesh.getLocalTransform().getRotation().fromAxisAngle(Vector3f.UNIT_Y, -angle);
     }
 
 }
