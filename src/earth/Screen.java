@@ -57,6 +57,7 @@ public class Screen {
         frame.add(canvas);// 设置画布
         frame.pack();
         frame.setVisible(true);
+
         centerScreen();// 窗口居中
         
         // 焦点集中到画布上，响应用户输入。
@@ -125,6 +126,10 @@ public class Screen {
      */
     public Input getInput() {
         return input;
+    }
+
+    public void setBg(Color color){
+        this.frame.setBackground(color);
     }
 
 }

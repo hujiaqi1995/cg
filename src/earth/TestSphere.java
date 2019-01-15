@@ -13,6 +13,8 @@ import scene.shape.Box;
 import scene.shape.Sphere;
 import shader.UnshadedShader;
 
+import java.awt.*;
+
 /**
  * 测试Sphere网格
  */
@@ -56,9 +58,11 @@ public class TestSphere extends Application {
 
         // 添加到场景中
         Geometry geometry = new Geometry(mesh, material);
-        rootNode.attachChild(geometry);
+//        rootNode.attachChild(geometry);
+        rootNode.attachChild(geom);
+
         // 设置着色器
-//        material.getRenderState().setFillMode(RenderState.FillMode.LINE);
+        material.getRenderState().setFillMode(RenderState.FillMode.LINE);
         material.setShader(new UnshadedShader());
     }
 
@@ -72,6 +76,6 @@ public class TestSphere extends Application {
         }
 
         // 计算旋转：绕Z轴顺时针方向旋转
-//        geom.getLocalTransform().getRotation().fromAxisAngle(Vector3f.UNIT_Y, -angle);
+        geom.getLocalTransform().getRotation().fromAxisAngle(Vector3f.UNIT_Y, -angle);
     }
 }

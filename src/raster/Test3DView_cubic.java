@@ -2,6 +2,7 @@ package raster;
 
 import earth.Application;
 import material.Material;
+import material.RenderState;
 import math.Vector3f;
 import renderer.Camera;
 import scene.Geometry;
@@ -26,7 +27,7 @@ public class Test3DView_cubic extends Application {
         // 添加到场景中
         this.geom = new Geometry(mesh, material);
         rootNode.attachChild(geom);
-
+//        material.getRenderState().setFillMode(RenderState.FillMode.LINE);
         // 调整摄像机的位置
         Camera cam = getCamera();
         cam.lookAt(new Vector3f(3, 4, 8), Vector3f.ZERO, Vector3f.UNIT_Y);

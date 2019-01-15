@@ -1,5 +1,6 @@
 package earth;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +87,7 @@ public abstract class Application {
         
         // 创建主窗口
         screen = new Screen(width, height, title);
+//        screen.setBg(new Color(255,255,255));
         
         // 创建渲染器
         renderer = new Renderer(width, height);
